@@ -47,13 +47,15 @@ class PostsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->Post->create();
-			if ($this->Post->save($this->request->data)) {
-				$this->Session->setFlash(__('The post has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The post could not be saved. Please, try again.'));
+			foreach ($this->request->data as $post) {
+				$this->Post->create();
+				if ($this->Post->save($post)) {
+					$this->Session->setFlash(__('The post has been saved ' . @$post['title'] . '.'));
+				} else {
+					$this->Session->setFlash(__('The post could not be saved. Please, try again.'));
+				}
 			}
+			return $this->redirect(array('action' => 'index'));
 		}
 	}
 
